@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Аня — фотограф · портфолио</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Manrope:wght@400;500;600&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Демо-лендинг «Сайт-портфолио для фотографа»
+   По ТЗ заказа Kwork №3271521 · v2
+   Первый экран: фото в центре, текст вокруг — журнально.
+   Появились: крупный фотоаппарат, плёночная лента, полароиды,
+   альбом со съёмок, рукописные подписи (Caveat).
+   Подписи ФОТО nn — плейсхолдеры под кадры заказчицы.
+   ============================================================ */
+:root{
+  --bg:#f4f1ec;
+  --bg-2:#ece8e1;
+  --ink:#2e2c29;
+  --ink-soft:#6f6a63;
+  --line:#d8d2c8;
+  --cream:#f7f3ec;
+  --warm:#cbb9a2;
+  --font-head:'Playfair Display', Georgia, serif;
+  --font-body:'Manrope', 'Segoe UI', Arial, sans-serif;
+  --font-hand:'Caveat', cursive;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-body);
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+h1,h2,h3,h4{font-family:var(--font-head);font-weight:500;letter-spacing:.01em}
+section{padding:110px 6vw}
+.wrap{max-width:1200px;margin:0 auto;position:relative}
+/* лёгкое «зерно плёнки» поверх всего */
+body::after{
+  content:"";position:fixed;inset:0;z-index:90;pointer-events:none;opacity:.05;
+  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"/></filter><rect width="120" height="120" filter="url(%23n)"/></svg>');
+}
+
+/* ---------- навигация ---------- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:80;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:20px 6vw;
+  background:linear-gradient(var(--bg) 55%, rgba(244,241,236,0));
+}
+nav .logo{font-family:var(--font-head);font-size:19px;letter-spacing:.16em;text-transform:uppercase}
+nav ul{display:flex;gap:32px;list-style:none}
+nav a{color:var(--ink);text-decoration:none;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+nav a:hover{opacity:.5}
+@media(max-width:760px){nav ul{display:none}}
+
+/* ---------- герой: фото-центричная журнальная обложка ---------- */
+.hero{min-height:100vh;display:grid;place-items:center;position:relative;padding:130px 6vw 70px}
+.stage{position:relative;width:min(1100px,100%);display:grid;place-items:center}
+.stage .photo{
+  width:min(52%,470px);aspect-ratio:3/4;position:relative;z-index:1;
+  background:linear-gradient(160deg,#d8ccb9 0%,#bfa98e 48%,#9a8264 100%);
+  box-shadow:0 40px 80px -34px rgba(46,44,41,.35);
+}
+.stage .cap{
+  position:absolute;top:16px;right:18px;z-index:2;
+  font-size:10px;letter-spacing:.32em;color:var(--cream);text-transform:uppercase;
+  border:1px solid rgba(247,243,236,.5);padding:6px 12px;border-radius:2px;
+}
+.stage .over{
+  position:absolute;z-index:3;top:calc(0% + 34px);left:50%;transform:translateX(-50%);
+  font-size:12px;letter-spacing:.45em;text-transform:uppercase;color:var(--ink-soft);
+  white-space:nowrap;
+}
+.stage h1{
+  position:absolute;z-index:3;left:50%;transform:translateX(-50%);
+  top:34%;text-align:center;width:120%;pointer-events:none;
+}
+.stage h1 .l1{display:block;font-size:clamp(40px,6.4vw,78px);color:var(--ink);line-height:1.05}
+.stage h1 .l2{display:block;font-style:italic;font-size:clamp(32px,5vw,60px);color:#fffdf7;margin-top:14px;line-height:1.1;text-shadow:0 3px 34px rgba(20,18,16,.5),0 1px 2px rgba(20,18,16,.25)}
+.stage .byline{
+  position:absolute;z-index:3;bottom:26%;left:50%;transform:translateX(-50%);
+  font-family:var(--font-hand);font-size:23px;color:var(--cream);
+  text-shadow:0 1px 14px rgba(46,44,41,.3);white-space:nowrap;
+}
+.stage .cta{
+  position:absolute;z-index:4;bottom:6%;left:50%;transform:translateX(-50%);
+  border:1px solid var(--ink);padding:15px 40px;background:var(--bg);
+  color:var(--ink);text-decoration:none;font-size:13px;letter-spacing:.1em;text-transform:uppercase;
+  transition:.3s;
+}
+.stage .cta:hover{background:var(--ink);color:var(--cream)}
+/* боковые журнальные подписи */
+.corner{position:absolute;z-index:3;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft)}
+.corner.l{left:1%;top:42%;writing-mode:vertical-rl;transform:rotate(180deg)}
+.corner.r{right:1%;top:48%;writing-mode:vertical-rl}
+/* крупный фотоаппарат стоит слева от снимка */
+.camera{
+  position:absolute;z-index:4;left:4%;bottom:12%;
+  width:clamp(170px,22vw,280px);
+  transform:rotate(-9deg);
+  filter:drop-shadow(0 26px 26px rgba(46,44,41,.28));
+  animation:float 7s ease-in-out infinite;
+}
+@keyframes float{0%,100%{translate:0 0;rotate:-9deg}50%{translate:0 -10px;rotate:-7.5deg}}
+@media(max-width:900px){
+  .camera{left:auto;right:-4%;bottom:-6%;width:150px}
+  .stage .photo{width:min(80%,380px)}
+  .stage h1{width:100%}
+  .corner{display:none}
+}
+
+/* ---------- плёночная лента-разделитель ---------- */
+.film{
+  background:var(--ink);overflow:hidden;
+  padding:14px 0;position:relative;
+}
+.film::before,.film::after{
+  content:"";position:absolute;left:0;right:0;height:7px;
+  background:repeating-linear-gradient(90deg, transparent 0 9px, var(--bg) 9px 17px);
+  opacity:.9;
+}
+.film::before{top:4px}
+.film::after{bottom:4px}
+.film .reel{display:inline-block;white-space:nowrap;animation:reel 30s linear infinite;
+  color:var(--cream);font-size:12px;letter-spacing:.3em;text-transform:uppercase;padding:2px 0}
+.film .reel i{font-style:normal;color:var(--warm);margin:0 18px}
+@keyframes reel{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ---------- портфолио: полароиды ---------- */
+.portfolio{background:var(--bg)}
+.portfolio .head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:70px;flex-wrap:wrap}
+.portfolio h2{font-size:clamp(30px,3.8vw,48px)}
+.filters{display:flex;gap:10px;flex-wrap:wrap}
+.filters button{
+  font-family:var(--font-body);font-size:13px;letter-spacing:.06em;
+  background:none;border:1px solid var(--line);color:var(--ink-soft);
+  padding:9px 20px;cursor:pointer;border-radius:30px;transition:.25s;
+}
+.filters button.active,.filters button:hover{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px 34px;align-items:start}
+.polaroid{
+  background:#fdfcf9;padding:13px 13px 46px;
+  box-shadow:0 18px 34px -18px rgba(46,44,41,.35);
+  transform:rotate(var(--r,0deg));transition:.35s ease;position:relative;cursor:pointer;
+}
+.polaroid:nth-child(odd){--r:-2.2deg}
+.polaroid:nth-child(even){--r:1.8deg}
+.polaroid:nth-child(3n){--r:-1deg}
+.polaroid::before{ /* скотч */
+  content:"";position:absolute;top:-12px;left:50%;transform:translateX(-50%) rotate(-2deg);
+  width:76px;height:24px;background:rgba(216,203,182,.55);
+  box-shadow:0 2px 6px rgba(46,44,41,.12);
+}
+.polaroid .im{position:relative;aspect-ratio:1/1;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.polaroid .big.im{aspect-ratio:8/5}
+.polaroid .im span{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(46,44,41,.4)}
+.polaroid .im::after{content:"";position:absolute;inset:0;background:linear-gradient(140deg,rgba(255,255,255,.25),transparent 45%)}
+.polaroid .t{
+  position:absolute;left:10px;right:10px;bottom:7px;text-align:center;
+  font-family:var(--font-hand);font-size:21px;line-height:1.1;color:var(--ink);
+}
+.polaroid .stamp{
+  position:absolute;right:18px;top:16px;z-index:2;
+  font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,253,247,.95);border:1px solid rgba(255,253,247,.55);
+  padding:3px 9px;border-radius:2px;
+}
+.polaroid:hover{transform:rotate(0) translateY(-12px) scale(1.04);z-index:6;box-shadow:0 30px 50px -20px rgba(46,44,41,.45)}
+.polaroid.hidden{display:none}
+.p1{background:linear-gradient(150deg,#e3d9cb,#c4b49e)}
+.p2{background:linear-gradient(200deg,#ded6cc,#a99a86)}
+.p3{background:linear-gradient(170deg,#e9e2d8,#bfb2a0)}
+.p4{background:linear-gradient(140deg,#d4c8b8,#93856f)}
+.p5{background:linear-gradient(180deg,#e0d8cd,#b6a894)}
+.p6{background:linear-gradient(160deg,#d8cec2,#a3937d)}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.grid{grid-template-columns:1fr;max-width:380px;margin:0 auto}}
+
+/* ---------- обо мне ---------- */
+.about{background:var(--bg-2)}
+.about .wrap{display:grid;grid-template-columns:.85fr 1.15fr;gap:70px;align-items:center}
+.about .photo{
+  position:relative;aspect-ratio:1/1;background:linear-gradient(140deg,#e6ddd1,#b7a890);
+  box-shadow:0 24px 44px -24px rgba(46,44,41,.3);transform:rotate(2deg);
+}
+.about .photo::before{content:"";position:absolute;top:-13px;left:24px;width:80px;height:24px;background:rgba(216,203,182,.55);transform:rotate(-3deg)}
+.about .photo span{position:absolute;top:16px;right:16px;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(46,44,41,.4)}
+.about h2{font-size:clamp(28px,3.2vw,42px);margin-bottom:26px}
+.about p{color:var(--ink-soft);margin-bottom:16px;max-width:52ch}
+.about .sign{font-family:var(--font-hand);font-size:30px;color:var(--ink)}
+@media(max-width:900px){.about .wrap{grid-template-columns:1fr;gap:44px}}
+
+/* ---------- альбом со съёмок ---------- */
+.album{background:var(--bg);overflow:hidden}
+.album h2{font-size:clamp(30px,3.8vw,48px);text-align:center}
+.album .sub{text-align:center;color:var(--ink-soft);margin:10px 0 74px;font-size:14px;letter-spacing:.06em}
+.book{position:relative;max-width:940px;margin:0 auto;min-height:430px}
+.book::before{ /* корешок */
+  content:"";position:absolute;left:50%;top:-16px;bottom:-16px;width:2px;transform:translateX(-50%);
+  background:linear-gradient(var(--ink-soft),transparent 85%);
+  opacity:.35;
+}
+.page{
+  position:relative;width:calc(50% - 30px);
+  background:#fbf8f2;border-radius:3px;padding:30px 26px;
+  box-shadow:0 24px 50px -24px rgba(46,44,41,.3);
+}
+.page.l{float:left}.page.r{float:right}
+.page .ph-tip{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#b0a38e;margin-bottom:16px}
+.page .mini{position:relative;aspect-ratio:4/3;background:linear-gradient(150deg,#ddd3c6,#bbab93)/*placeholder*/;margin-bottom:22px}
+.page .mini:last-child{margin-bottom:0}
+.page .mini b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:400;font-size:10px;letter-spacing:.3em;color:rgba(46,44,41,.38);text-transform:uppercase}
+.page .num{position:absolute;bottom:-34px;left:0;font-family:var(--font-hand);font-size:20px;color:var(--ink-soft)}
+/* выпавшие из альбома полароиды */
+.loose{position:absolute;z-index:5}
+.loose.a{width:190px;left:-9%;top:-12%;transform:rotate(-7deg)}
+.loose.b{width:170px;right:-6%;top:8%;transform:rotate(5deg)}
+.loose.c{width:200px;left:6%;bottom:-16%;transform:rotate(3deg)}
+.loose.d{width:185px;right:2%;bottom:-20%;transform:rotate(-4deg)}
+.loose:hover{transform:rotate(0) scale(1.06) translateY(-8px);z-index:9}
+@media(max-width:900px){
+  .page{float:none;width:100%;margin-bottom:46px}
+  .book::before{display:none}
+  .loose{display:none}
+  .book{min-height:0}
+}
+
+/* ---------- форматы и стоимость ---------- */
+.formats{background:var(--bg-2)}
+.formats h2{font-size:clamp(30px,3.8vw,48px);text-align:center;margin-bottom:10px}
+.formats .sub{text-align:center;color:var(--ink-soft);margin-bottom:64px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.card{
+  background:#fbfaf8;border:1px solid var(--line);
+  padding:44px 34px;text-align:center;transition:.3s;position:relative;
+}
+.card:hover{transform:translateY(-6px);box-shadow:0 24px 48px -24px rgba(46,44,41,.22)}
+.card .num{font-family:var(--font-head);font-style:italic;font-size:15px;color:var(--ink-soft)}
+.card h3{font-size:24px;margin:14px 0 6px}
+.card .time{color:var(--ink-soft);font-size:13px;letter-spacing:.05em}
+.card .inc{margin:24px 0;color:var(--ink-soft);font-size:14px;line-height:1.9}
+.card .price{font-family:var(--font-head);font-size:32px;font-style:italic}
+.card .note{font-size:11px;color:var(--ink-soft);margin-top:10px;letter-spacing:.04em}
+@media(max-width:900px){.cards{grid-template-columns:1fr;max-width:480px;margin:0 auto}}
+
+/* ---------- процесс ---------- */
+.process{background:var(--bg)}
+.process h2{font-size:clamp(30px,3.8vw,48px);text-align:center;margin-bottom:64px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
+.step{position:relative;padding-top:26px}
+.step::before{content:"";position:absolute;top:0;left:0;right:60%;height:1px;background:var(--ink)}
+.step .n{font-family:var(--font-head);font-style:italic;font-size:15px;color:var(--ink-soft)}
+.step h4{font-size:20px;margin:8px 0 10px}
+.step p{color:var(--ink-soft);font-size:14px}
+@media(max-width:900px){.steps{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.steps{grid-template-columns:1fr}}
+
+/* ---------- финал ---------- */
+.final{background:var(--bg-2);padding:130px 6vw}
+.final .wrap{display:grid;grid-template-columns:.9fr 1.1fr;gap:70px;align-items:center}
+.final .photo{position:relative;aspect-ratio:4/5;background:linear-gradient(150deg,#ddd3c6,#ab9c86);transform:rotate(-2deg)}
+.final .photo::before{content:"";position:absolute;top:-13px;right:20px;width:80px;height:24px;background:rgba(216,203,182,.55);transform:rotate(2deg)}
+.final .photo span{position:absolute;top:16px;left:16px;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(46,44,41,.4)}
+.final h2{font-size:clamp(34px,4.4vw,56px);line-height:1.12;margin-bottom:24px}
+.final p{color:var(--ink-soft);max-width:44ch;margin-bottom:14px}
+.final a.btn{
+  margin-top:24px;display:inline-block;
+  background:var(--ink);color:var(--cream);text-decoration:none;
+  padding:16px 44px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;transition:.3s;
+}
+.final a.btn:hover{opacity:.85}
+.final .alt{display:block;margin-top:14px;font-size:14px;color:var(--ink-soft);text-decoration:underline;text-underline-offset:4px}
+@media(max-width:900px){.final .wrap{grid-template-columns:1fr}}
+
+footer{padding:34px 6vw;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:var(--ink-soft);font-size:12px;letter-spacing:.06em}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Аня · фото</div>
+  <ul>
+    <li><a href="#portfolio">Портфолио</a></li>
+    <li><a href="#album">Альбом</a></li>
+    <li><a href="#about">Обо мне</a></li>
+    <li><a href="#formats">Форматы</a></li>
+    <li><a href="#process">Как проходит</a></li>
+    <li><a href="#final">Написать</a></li>
+  </ul>
+</nav>
+
+<!-- Первый экран: снимок в центре композиции, текст вокруг него -->
+<header class="hero">
+  <div class="stage">
+    <div class="photo"><div class="cap">фото 01</div></div>
+    <div class="over">фотограф · москва</div>
+    <h1>
+      <span class="l1">Люди в кадре</span>
+      <span class="l2">спокойные и настоящие</span>
+    </h1>
+    <div class="byline">наведите курсор — и всё оживёт ✦</div>
+    <a class="cta" href="#final">Записаться на съёмку</a>
+    <span class="corner l">индивидуальные · пары · коммерческие</span>
+    <span class="corner r">запись на ближайшие даты открыта</span>
+
+    <!-- крупный фотоаппарат-камео -->
+    <svg class="camera" viewBox="0 0 240 190" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- ремень -->
+      <path d="M30 64 C 6 40, 6 20, 26 12" stroke="#8f7f6a" stroke-width="4" stroke-linecap="round"/>
+      <path d="M210 64 C 234 40, 234 20, 214 12" stroke="#8f7f6a" stroke-width="4" stroke-linecap="round"/>
+      <!-- верхняя панель -->
+      <rect x="42" y="38" width="156" height="26" rx="7" fill="#4a463f"/>
+      <rect x="92" y="27" width="54" height="13" rx="5" fill="#4a463f"/>
+      <circle cx="58" cy="51" r="6" fill="#cbb9a2"/>
+      <circle cx="182" cy="51" r="6" fill="#cbb9a2"/>
+      <rect x="100" y="47" width="40" height="10" rx="3" fill="#cbb9a2" opacity=".5"/>
+      <!-- корпус -->
+      <rect x="18" y="60" width="204" height="112" rx="16" fill="#2e2c29"/>
+      <!-- большой объектив -->
+      <circle cx="104" cy="116" r="46" fill="#efe9df"/>
+      <circle cx="104" cy="116" r="38" fill="#8f7f6a"/>
+      <circle cx="104" cy="116" r="24" fill="#242220"/>
+      <circle cx="104" cy="116" r="13" fill="#5f4c39"/>
+      <circle cx="99" cy="110" r="5" fill="#e9ddca" opacity=".8"/>
+      <!-- маленький объектив -->
+      <circle cx="182" cy="112" r="17" fill="#efe9df"/>
+      <circle cx="182" cy="112" r="11" fill="#242220"/>
+      <circle cx="182" cy="112" r="6" fill="#6f5b45"/>
+      <!-- окно видоискателя и кнопки -->
+      <rect x="34" y="74" width="26" height="12" rx="3" fill="#cbb9a2"/>
+      <circle cx="30" cy="150" r="6" fill="#a24936"/>
+      <circle cx="212" cy="150" r="5" fill="#cbb9a2"/>
+      <!-- подпись -->
+      <text x="130" y="164" font-family="Georgia, serif" font-size="9" letter-spacing="3" fill="#cbb9a2">AN·PHOTO</text>
+    </svg>
+  </div>
+</header>
+
+<!-- плёночная лента -->
+<div class="film" aria-hidden="true">
+  <div class="reel">плёнка kodak portra 400<i>✦</i>индивидуальные<i>✦</i>пары<i>✦</i>коммерческие<i>✦</i>плёнка kodak portra 400<i>✦</i>индивидуальные<i>✦</i>пары<i>✦</i>коммерческие<i>✦</i>плёнка kodak portra 400<i>✦</i>индивидуальные<i>✦</i>пары<i>✦</i>коммерческие<i>✦</i>плёнка kodak portra 400<i>✦</i>индивидуальные<i>✦</i>пары<i>✦</i>коммерческие<i>✦</i></div>
+</div>
+
+<!-- Портфолио: отобранные кадры как полароиды на скотче -->
+<section id="portfolio" class="portfolio">
+  <div class="wrap">
+    <div class="head">
+      <h2>Избранные съёмки</h2>
+      <div class="filters" id="filters">
+        <button class="active" data-f="all">Все</button>
+        <button data-f="indiv">Индивидуальные</button>
+        <button data-f="pair">Пары</button>
+        <button data-f="comm">Коммерческие</button>
+      </div>
+    </div>
+    <div class="grid" id="grid">
+      <div class="polaroid big" data-cat="indiv"><div class="im p1"><span>фото 02</span></div><div class="t">лес в тумане, апрель</div><div class="stamp">kodak 400</div></div>
+      <div class="polaroid" data-cat="pair"><div class="im p2"><span>фото 03</span></div><div class="t">утренний свет</div><div class="stamp">portra</div></div>
+      <div class="polaroid" data-cat="comm"><div class="im p3"><span>фото 04</span></div><div class="t">бренд керамики</div><div class="stamp">studio</div></div>
+      <div class="polaroid" data-cat="indiv"><div class="im p4"><span>фото 05</span></div><div class="t">студия, просто я</div><div class="stamp">kodak 400</div></div>
+      <div class="polaroid" data-cat="pair"><div class="im p5"><span>фото 06</span></div><div class="t">город вечером</div><div class="stamp">portra</div></div>
+      <div class="polaroid" data-cat="comm"><div class="im p6"><span>фото 07</span></div><div class="t">кофейня «пар»</div><div class="stamp">studio</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Обо мне: коротко, о том, как проходит съёмка -->
+<section id="about" class="about">
+  <div class="wrap">
+    <div class="photo"><span>фото 08 · я</span></div>
+    <div>
+      <h2>Обо мне</h2>
+      <p>Меня зовут Аня. Я снимаю людей — по одному, вдвоём, иногда небольшими командами. За кадром не гонюсь за эффектностью: сначала мы просто разговариваем, потом снимаем.</p>
+      <p>Мне важно, чтобы человек чувствовал себя спокойно: съёмка — это не экзамен, а прогулка с камерой. Обычно через десять минут все забывают про камеру.</p>
+      <p class="sign">— Аня 📷</p>
+    </div>
+  </div>
+</section>
+
+<!-- Альбом: разворот + выпавшие полароиды -->
+<section id="album" class="album">
+  <div class="wrap">
+    <h2>Альбом со съёмок</h2>
+    <p class="sub">несколько страниц из прошлого сезона · наведите курсор на карточки</p>
+    <div class="book">
+      <div class="page l">
+        <div class="ph-tip">март — май</div>
+        <div class="mini"><b>фото 10</b></div>
+        <div class="mini"><b>фото 11</b></div>
+        <div class="num">стр. 12</div>
+      </div>
+      <div class="page r">
+        <div class="ph-tip">июнь — август</div>
+        <div class="mini"><b>фото 12</b></div>
+        <div class="mini"><b>фото 13</b></div>
+        <div class="num">стр. 13</div>
+      </div>
+      <div class="polaroid loose a"><div class="im p2"><span>фото 14</span></div><div class="t">первый тёплый день</div></div>
+      <div class="polaroid loose b"><div class="im p4"><span>фото 15</span></div><div class="t">двое и гроза</div></div>
+      <div class="polaroid loose c"><div class="im p5"><span>фото 16</span></div><div class="t">смеются из-за чашки</div></div>
+      <div class="polaroid loose d"><div class="im p1"><span>фото 17</span></div><div class="t">закат на крыше</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Форматы: три понятных варианта, без гигантских тарифных таблиц -->
+<section id="formats" class="formats">
+  <div class="wrap">
+    <h2>Форматы и стоимость</h2>
+    <p class="sub">Три простых варианта. Всё понятно заранее — без «звёздочек».</p>
+    <div class="cards">
+      <div class="card">
+        <div class="num">i.</div>
+        <h3>Индивидуальная</h3>
+        <div class="time">1,5 часа · локация на выбор</div>
+        <div class="inc">35–40 обработанных кадров<br>все фото в течение 7 дней<br>помощь с идеей и образом</div>
+        <div class="price">4 000 ₽</div>
+        <div class="note">замените на вашу цену</div>
+      </div>
+      <div class="card">
+        <div class="num">ii.</div>
+        <h3>Для двоих</h3>
+        <div class="time">2 часа · прогулка или студия</div>
+        <div class="inc">50+ обработанных кадров<br>живые, искренние кадры<br>маленький сюрприз в подарок</div>
+        <div class="price">5 500 ₽</div>
+        <div class="note">замените на вашу цену</div>
+      </div>
+      <div class="card">
+        <div class="num">iii.</div>
+        <h3>Коммерческая</h3>
+        <div class="time">от 2 часов · по брифу</div>
+        <div class="inc">предметка / команда бренда<br>контент для соцсетей<br>обсуждаем задачу отдельно</div>
+        <div class="price">от 7 000 ₽</div>
+        <div class="note">замените на вашу цену</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Как проходит съёмка -->
+<section id="process" class="process">
+  <div class="wrap">
+    <h2>Как проходит съёмка</h2>
+    <div class="steps">
+      <div class="step"><div class="n">01</div><h4>Списываемся</h4><p>Пишете мне здесь или в Telegram — рассказываю свободные даты.</p></div>
+      <div class="step"><div class="n">02</div><h4>Обсуждаем идею</h4><p>Место, настроение, образы. Это занимает один диалог.</p></div>
+      <div class="step"><div class="n">03</div><h4>Съёмка</h4><p>Спокойно, без спешки. Помогаю с позами.</p></div>
+      <div class="step"><div class="n">04</div><h4>Готовые фото</h4><p>Отбираю лучшие кадры, обрабатываю и присылаю до 7 дней.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Финальный блок: фото + коротко + заявка -->
+<section id="final" class="final">
+  <div class="wrap">
+    <div class="photo"><span>фото 09</span></div>
+    <div>
+      <h2>Давайте<br>просто попробуем</h2>
+      <p>Напишите пару слов о себе и что хотите снять — предложу даты и идею. Это ни к чему не обязывает.</p>
+      <p>Обычно отвечаю в течение дня.</p>
+      <a class="btn" href="mailto:hello@anya-photo.ru?subject=Хочу на съёмку">Написать мне</a>
+      <a class="alt" href="https://t.me/anya_photo" target="_blank" rel="noopener">или в Telegram →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>© Аня · фотограф</div>
+  <div>Москва · Telegram · VK · Instagram</div>
+</footer>
+
+<script>
+// фильтр портфолио
+const grid = document.getElementById('grid');
+document.getElementById('filters').addEventListener('click', e => {
+  if (e.target.tagName !== 'BUTTON') return;
+  document.querySelectorAll('#filters button').forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+  const f = e.target.dataset.f;
+  grid.querySelectorAll('.polaroid').forEach(it => {
+    it.classList.toggle('hidden', f !== 'all' && it.dataset.cat !== f);
+  });
+});
+</script>
+</body>
+</html>
